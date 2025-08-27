@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Criptografía — CiberGuard SV</title>
+  <meta name="description" content="Laboratorio de criptografía en el navegador: hashing, AES-GCM con contraseña, cifrado César y utilidades Base64. 100% HTML/CSS/JS." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1220; --card:#0f172a; --muted:#94a3b8; --text:#e5e7eb; --brand:#0ea5e9; --brand-2:#6366f1; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:'Inter',system-ui,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(1200px 600px at 10% -10%, rgba(14,165,233,.15), transparent), radial-gradient(900px 500px at 110% -20%, rgba(99,102,241,.15), transparent), var(--bg);color:var(--text)}
+    a{color:var(--text);text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
+    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(8px);background:rgba(11,18,32,.6);z-index:50;border-bottom:1px solid rgba(148,163,184,.15)}
+    nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:.6rem;align-items:center;font-weight:800;letter-spacing:.4px}
+    .brand svg{width:26px;height:26px}
+    .navlinks{display:flex;gap:1rem;align-items:center}
+    .btn{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;border:none;border-radius:999px;padding:.7rem 1rem;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .btn.secondary{background:transparent;border:1px solid rgba(148,163,184,.3);color:var(--text)}
+    .hero{padding:48px 0 22px}
+    .hero h1{font-size:clamp(26px,3.2vw,42px);margin:.2rem 0}
+    .muted{color:var(--muted)}
+    .grid{display:grid;gap:18px}
+    .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .card{background:var(--card);border:1px solid rgba(148,163,184,.15);border-radius:var(--radius);padding:18px}
+    textarea,input,select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:#0b1220;color:var(--text)}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .copy{border:1px solid rgba(148,163,184,.35);background:rgba(148,163,184,.05);color:var(--text);padding:8px 10px;border-radius:10px;font-weight:700;cursor:pointer}
+    .ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+    @media (max-width: 880px){.grid.cols-2,.grid.cols-3{grid-template-columns:1fr}}
+    @media print{header,.copy,.btn{display:none}}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "JetBrains Mono", Consolas, "Liberation Mono", monospace; font-size:.95rem}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <nav>
+      <a href="home.html" class="brand" aria-label="Ir a inicio">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 14.5a1 1 0 0 1-2 0V13a1 1 0 0 1 2 0Zm-1-9a1.5 1.5 0 1 1-1.5 1.5A1.5 1.5 0 0 1 12 7.5Z"/></svg>
+        CiberGuard <span class="muted">SV</span>
+      </a>
+      <div class="navlinks">
+        <a href="home.html#servicios">Servicios</a>
+        <a href="#hashing">Hashing</a>
+        <a href="#aes">AES‑GCM</a>
+        <a href="#cesar">César</a>
+        <a href="#base64">Base64</a>
+        <button class="btn" onclick="window.print()">Imprimir (PDF)</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <h1>Laboratorio de <span style="background:linear-gradient(135deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent">criptografía</span> en el navegador</h1>
+    <p class="muted">Herramientas educativas 100% front‑end. <b>Nota:</b> para producción usa bibliotecas y políticas maduras; esto es demostrativo.</p>
+  </section>
+
+  <!-- Hashing -->
+  <section id="hashing" class="grid cols-2">
+    <div class="card">
+      <h2>Hash (SHA‑256 / SHA‑512)</h2>
+      <p class="muted">Calcula el resumen criptográfico de un texto. Hash ≠ cifrado (no es reversible).</p>
+      <textarea id="hash-input" rows="4" placeholder="Escribe texto para hashear…" class="mono"></textarea>
+      <div class="row" style="margin-top:8px">
+        <select id="hash-algo"><option>SHA-256</option><option>SHA-512</option></select>
+        <button class="btn" onclick="doHash()">Hashear</button>
+        <button class="copy" onclick="copy('#hash-out')">Copiar</button>
+      </div>
+      <textarea id="hash-out" rows="3" class="mono" placeholder="Resultado (hex)" readonly style="margin-top:8px"></textarea>
+    </div>
+
+    <!-- AES GCM -->
+    <div class="card" id="aes">
+      <h2>AES‑GCM 256 con contraseña (PBKDF2)</h2>
+      <p class="muted">Cifra/descifra usando una contraseña. Derivación de clave: PBKDF2 150k iteraciones · Sal aleatoria · IV aleatorio.</p>
+      <textarea id="aes-plain" rows="4" class="mono" placeholder="Texto plano"></textarea>
+      <div class="row" style="margin-top:8px">
+        <input id="aes-pass" type="password" placeholder="Contraseña"/>
+        <button class="btn" onclick="encryptAES()">Cifrar →</button>
+      </div>
+      <textarea id="aes-ct" rows="4" class="mono" placeholder="Resultado cifrado (paquete base64)" readonly style="margin-top:8px"></textarea>
+      <div class="row" style="margin-top:8px">
+        <input id="aes-pass2" type="password" placeholder="Contraseña para descifrar"/>
+        <button class="btn secondary" onclick="decryptAES()">← Descifrar</button>
+        <button class="copy" onclick="copy('#aes-ct')">Copiar</button>
+      </div>
+      <textarea id="aes-out" rows="3" class="mono" placeholder="Texto descifrado" readonly style="margin-top:8px"></textarea>
+    </div>
+  </section>
+
+  <!-- César + Base64 -->
+  <section class="grid cols-2" style="margin-top:18px">
+    <div class="card" id="cesar">
+      <h2>Cifrado César (demo)</h2>
+      <p class="muted">Cifrado clásico por desplazamiento. <i>No</i> es seguro; sirve para explicar el concepto.</p>
+      <textarea id="cz-in" rows="3" class="mono" placeholder="Texto"></textarea>
+      <div class="row" style="margin-top:8px">
+        <label for="cz-shift" class="muted">Desplazamiento:</label>
+        <input id="cz-shift" type="range" min="0" max="25" value="3" style="width:180px">
+        <span id="cz-val" class="muted">3</span>
+        <button class="btn" onclick="czDo(true)">Cifrar</button>
+        <button class="btn secondary" onclick="czDo(false)">Descifrar</button>
+      </div>
+      <textarea id="cz-out" rows="3" class="mono" placeholder="Resultado" readonly style="margin-top:8px"></textarea>
+    </div>
+
+    <div class="card" id="base64">
+      <h2>Base64 (encode/decode)</h2>
+      <p class="muted">Codificación binario‑a‑texto. No es cifrado.</p>
+      <textarea id="b64-in" rows="3" class="mono" placeholder="Texto"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" onclick="b64Encode()">Codificar</button>
+        <button class="btn secondary" onclick="b64Decode()">Decodificar</button>
+        <button class="copy" onclick="copy('#b64-out')">Copiar</button>
+      </div>
+      <textarea id="b64-out" rows="3" class="mono" placeholder="Resultado" readonly style="margin-top:8px"></textarea>
+    </div>
+  </section>
+
+  <section class="card" style="margin:24px 0">
+    <b>Descargo educativo:</b> Estas herramientas son demostrativas y corren en tu navegador. En producción emplea librerías auditadas, políticas de rotación de claves, manejo seguro de IV/salt y revisiones por pares.
+  </section>
+</main>
+
+<script>
+  // ===== Helpers =====
+  const $ = sel => document.querySelector(sel);
+  const enc = new TextEncoder();
+  const dec = new TextDecoder();
+  const toHex = buf => Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const fromHex = hex => new Uint8Array(hex.match(/.{1,2}/g).map(byte=>parseInt(byte,16))).buffer;
+  const b64 = {
+    enc: buf => btoa(String.fromCharCode(...new Uint8Array(buf))),
+    dec: str => Uint8Array.from(atob(str), c=>c.charCodeAt(0)).buffer
+  };
+  async function copy(sel){
+    const v = $(sel).value || '';
+    try{ await navigator.clipboard.writeText(v); alert('Copiado'); }catch(e){ console.log(e) }
+  }
+
+  // ===== Hashing =====
+  async function doHash(){
+    const text = $('#hash-input').value;
+    const algo = $('#hash-algo').value.replace('-', ''); // 'SHA256' o 'SHA512'
+    const digest = await crypto.subtle.digest(algo, enc.encode(text));
+    $('#hash-out').value = toHex(digest);
+  }
+
+  // ===== AES-GCM 256 con contraseña (PBKDF2) =====
+  async function deriveKey(password, salt){
+    const keyMat = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey(
+      {name:'PBKDF2', salt, iterations:150000, hash:'SHA-256'},
+      keyMat,
+      {name:'AES-GCM', length:256},
+      false,
+      ['encrypt','decrypt']
+    );
+  }
+  function rand(bytes){ const b=new Uint8Array(bytes); crypto.getRandomValues(b); return b; }
+
+  async function encryptAES(){
+    const text = $('#aes-plain').value; const pass = $('#aes-pass').value;
+    if(!text || !pass){ alert('Ingresa texto y contraseña'); return }
+    const iv = rand(12); const salt = rand(16);
+    const key = await deriveKey(pass, salt);
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, enc.encode(text));
+    const pkg = { v:1, algo:'AES-GCM', kdf:'PBKDF2-SHA256-150k', iv: b64.enc(iv), salt: b64.enc(salt), ct: b64.enc(ct) };
+    $('#aes-ct').value = btoa(JSON.stringify(pkg));
+  }
+  async function decryptAES(){
+    const b64pkg = $('#aes-ct').value.trim(); const pass = $('#aes-pass2').value;
+    if(!b64pkg || !pass){ alert('Pega el paquete cifrado y la contraseña'); return }
+    try{
+      const pkg = JSON.parse(atob(b64pkg));
+      const iv = new Uint8Array(b64.dec(pkg.iv));
+      const salt = new Uint8Array(b64.dec(pkg.salt));
+      const ct = b64.dec(pkg.ct);
+      const key = await deriveKey(pass, salt);
+      const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, ct);
+      $('#aes-out').value = dec.decode(pt);
+    }catch(err){
+      console.error(err); alert('Error al descifrar. ¿Contraseña/paquete correctos?');
+    }
+  }
+
+  // ===== César =====
+  function czShift(str, n){
+    const a='abcdefghijklmnñopqrstuvwxyz'; // incluye ñ
+    const A=a.toUpperCase();
+    return [...str].map(ch=>{
+      const i=a.indexOf(ch); if(i>-1) return a[(i+n)%a.length];
+      const j=A.indexOf(ch); if(j>-1) return A[(j+n)%A.length];
+      return ch;
+    }).join('');
+  }
+  $('#cz-shift').addEventListener('input', e=> $('#cz-val').textContent = e.target.value);
+  function czDo(encdir=true){
+    const n = parseInt($('#cz-shift').value)||0; const text=$('#cz-in').value; const k = encdir? n : (26-n)%26; // invertir
+    $('#cz-out').value = czShift(text, k);
+  }
+
+  // ===== Base64 =====
+  function b64Encode(){ $('#b64-out').value = btoa($('#b64-in').value); }
+  function b64Decode(){
+    try{ $('#b64-out').value = atob($('#b64-in').value.trim()); }
+    catch{ alert('Base64 inválido'); }
+  }
+</script>
+</body>
+</html>

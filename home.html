@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CiberGuard SV — Ciberseguridad para PyMEs</title>
+  <meta name="description" content="Empresa salvadoreña de TI enfocada en ciberseguridad: pentesting, auditorías, respuesta a incidentes y capacitación. Incluye simuladores, chatbot y plan de negocio estilo Shark Tank." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%230ea5e9'/%3E%3Cstop offset='1' stop-color='%23636bff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M64 8c-19 0-36 10-47 26a8 8 0 0 0 1 10l14 14a40 40 0 0 1 29-13 40 40 0 0 1 29 13l14-14a8 8 0 0 0 1-10C100 18 83 8 64 8Z'/%3E%3Cpath fill='%23011' fill-opacity='.6' d='M22 70c0 23 19 42 42 42s42-19 42-42l-16-16A40 40 0 0 0 64 42a40 40 0 0 0-26 12L22 70z'/%3E%3Cpath fill='%23fff' d='M53 74a11 11 0 1 1 22 0v10a11 11 0 1 1-22 0V74z'/%3E%3C/svg%3E" />
+  <style>
+    :root{
+      --bg: #0b1220; --card:#0f172a; --muted:#94a3b8; --text:#e5e7eb; --brand:#0ea5e9; --brand-2:#6366f1; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+      --radius: 16px; --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --grad: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:'Inter',system-ui,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(1200px 600px at 10% -10%, rgba(14,165,233,.15), transparent), radial-gradient(900px 500px at 110% -20%, rgba(99,102,241,.15), transparent), var(--bg);color:var(--text);}
+    a{color:var(--text);text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
+    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(8px);background:rgba(11,18,32,.6);z-index:50;border-bottom:1px solid rgba(148,163,184,.15)}
+    nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:.6rem;align-items:center;font-weight:800;letter-spacing:.4px}
+    .brand svg{width:26px;height:26px}
+    .navlinks{display:flex;gap:1rem;align-items:center}
+    .btn, button{background:var(--grad);color:#fff;border:none;border-radius:999px;padding:.7rem 1rem;font-weight:600;cursor:pointer;box-shadow:var(--shadow);}
+    .btn.secondary{background:transparent;border:1px solid rgba(148,163,184,.3)}
+    .hero{padding:72px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center}
+    .hero h1{font-size:clamp(28px, 3.8vw, 52px);line-height:1.05;margin:.2rem 0}
+    .hero p{color:var(--muted);font-size:1.05rem}
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));padding:22px;border-radius:var(--radius);border:1px solid rgba(148,163,184,.15)}
+    .grid{display:grid;gap:18px}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+    .card{background:var(--card);border:1px solid rgba(148,163,184,.15);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+    .kpi{display:flex;gap:14px;align-items:center}
+    .kpi .bubble{width:42px;height:42px;border-radius:10px;background:var(--grad);display:grid;place-items:center}
+    .section{padding:64px 0}
+    .section h2{font-size:clamp(22px, 2.2vw, 32px);margin:0 0 10px}
+    .muted{color:var(--muted)}
+    .feature{display:flex;gap:14px}
+    .feature .icon{width:28px;height:28px}
+    .pill{display:inline-flex;gap:8px;align-items:center;padding:.32rem .6rem;border:1px solid rgba(148,163,184,.2);border-radius:999px;color:var(--muted);font-weight:600;font-size:.8rem}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .steps .step{background:transparent;border:1px dashed rgba(148,163,184,.25)}
+    .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .price-card{position:relative;overflow:hidden}
+    .price{font-size:36px;font-weight:800}
+    .badge{position:absolute;top:12px;right:12px;background:var(--grad);padding:.3rem .6rem;border-radius:999px;font-size:.75rem;font-weight:700}
+    .faq details{background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(148,163,184,.15)}
+    .faq summary{cursor:pointer;font-weight:600}
+    .split{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+    .sticky-card{position:sticky;top:86px}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{border-bottom:1px dashed rgba(148,163,184,.25);padding:10px;text-align:left}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{background:rgba(148,163,184,.15);border:1px solid rgba(148,163,184,.25);padding:.35rem .6rem;border-radius:999px;cursor:pointer}
+    .chat{height:360px;overflow:auto;padding:12px;background:rgba(2,6,23,.5);border-radius:12px;border:1px solid rgba(148,163,184,.15)}
+    .msg{display:flex;gap:10px;margin:8px 0}
+    .msg .bubble{padding:.6rem .8rem;border-radius:12px;max-width:78%}
+    .msg.user{justify-content:flex-end}
+    .msg.user .bubble{background:rgba(14,165,233,.2)}
+    .msg.bot .bubble{background:#0f172a}
+    .input-row{display:flex;gap:8px;margin-top:8px}
+    .tag{font-weight:700;color:#a3e635}
+    .notice{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35);padding:10px;border-radius:12px}
+    .danger{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35)}
+    .footer{padding:30px 0;border-top:1px solid rgba(148,163,184,.15)}
+    .inline{display:inline-flex;gap:8px;align-items:center}
+    .switch{appearance:none;width:52px;height:30px;border-radius:999px;background:rgba(148,163,184,.25);position:relative;outline:none;cursor:pointer}
+    .switch:checked{background:var(--grad)}
+    .switch:before{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:all .2s ease}
+    .switch:checked:before{left:25px}
+    .topbar{display:flex;gap:10px;flex-wrap:wrap}
+    .sticky-actions{display:flex;gap:10px;flex-wrap:wrap}
+    /* Responsive */
+    @media (max-width: 880px){
+      .hero{grid-template-columns:1fr}
+      .grid.cols-3{grid-template-columns:1fr}
+      .grid.cols-2{grid-template-columns:1fr}
+      .pricing{grid-template-columns:1fr}
+      .split{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr}
+    }
+    /* Print (para PDF estilo one-pager) */
+    @media print{header, .sticky-actions, .input-row, .chat, .chips, .faq details summary::after{display:none !important}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <nav>
+      <a href="#inicio" class="brand" aria-label="Ir al inicio">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 14.5a1 1 0 0 1-2 0V13a1 1 0 0 1 2 0Zm-1-9a1.5 1.5 0 1 1-1.5 1.5A1.5 1.5 0 0 1 12 7.5Z"/></svg>
+        CiberGuard <span class="muted">SV</span>
+      </a>
+      <div class="navlinks">
+        <a href="criptografia.html">Criptografia</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#simuladores">Simuladores</a>
+        <a href="#plan-negocio">Plan de negocio</a>
+        <a href="#precios">Precios</a>
+        <a href="#faq">FAQ</a>
+        <button class="btn" onclick="document.querySelector('#contacto').scrollIntoView({behavior:'smooth'})">Cotizar</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="inicio" class="container">
+  <section class="hero">
+    <div>
+      <div class="topbar">
+        <span class="pill">Empresa de TI · Ciberseguridad</span>
+        <span class="pill">Hecho en El Salvador 🇸🇻</span>
+        <label class="pill inline" title="Modo claro/oscuro"><input id="themeToggle" type="checkbox" class="switch"/> Tema</label>
+      </div>
+      <h1>Protegemos tu negocio con <span class="tag">ciberseguridad práctica</span> para PyMEs</h1>
+      <p>Pruebas de penetración, auditorías, respuesta a incidentes y capacitación. Todo en un solo lugar, con planes flexibles y resultados medibles.</p>
+      <div class="sticky-actions">
+        <button class="btn" onclick="document.getElementById('diagnostico').scrollIntoView({behavior:'smooth'})">Iniciar diagnóstico</button>
+        <button class="btn secondary" onclick="window.print()">Imprimir ficha (PDF)</button>
+      </div>
+      <div class="grid cols-3 hero-card" style="margin-top:16px">
+        <div class="kpi"><div class="bubble">🔒</div><div><b>99.9%</b><div class="muted">uptime monitoreo</div></div></div>
+        <div class="kpi"><div class="bubble">⚡</div><div><b>72h</b><div class="muted">promedio respuesta</div></div></div>
+        <div class="kpi"><div class="bubble">📈</div><div><b>3x</b><div class="muted">ROI objetivo</div></div></div>
+      </div>
+    </div>
+    <div class="hero-card" aria-label="Tarjeta principal con pasos">
+      <h3 style="margin:0">Así trabajamos</h3>
+      <div class="steps">
+        <div class="card step"><h4>1) Diagnóstico</h4><p class="muted">Escaneo inicial, entrevista y mapa de riesgos.</p></div>
+        <div class="card step"><h4>2) Mitigación</h4><p class="muted">Hardening, parches, MFA, backup y capacitación.</p></div>
+        <div class="card step"><h4>3) Soporte</h4><p class="muted">Monitoreo continuo y pruebas trimestrales.</p></div>
+      </div>
+      <p class="muted" style="margin-top:8px">Demo 100% front‑end (HTML/CSS/JS) lista para GitHub Pages.</p>
+    </div>
+  </section>
+
+  <section id="servicios" class="section">
+    <h2>Servicios</h2>
+    <p class="muted">Selecciona un servicio para ver el alcance.</p>
+    <div class="grid cols-3">
+      <div class="card">
+        <div class="feature"><div class="icon">🛡️</div><div><h3>Pentesting</h3><p class="muted">Caja negra/Gris. OWASP Top 10, reporte ejecutivo y técnico.</p></div></div>
+        <ul>
+          <li>Web/API · phishing simulado</li>
+          <li>Entrega en 10 días hábiles</li>
+          <li>Re-test sin costo</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="feature"><div class="icon">🧭</div><div><h3>Auditoría &amp; cumplimiento</h3><p class="muted">Controles base ISO/IEC 27001, CIS, NIST CSF.</p></div></div>
+        <ul>
+          <li>Inventario y clasificación de activos</li>
+          <li>Políticas, MFA, backup, mínimos privilegios</li>
+          <li>Plan de mejora trimestral</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="feature"><div class="icon">🚑</div><div><h3>Respuesta a incidentes</h3><p class="muted">Playbooks, contención, análisis forense básico.</p></div></div>
+        <ul>
+          <li>Retención de logs y cadena de custodia</li>
+          <li>Restauración segura y lecciones aprendidas</li>
+          <li>Simulacros mensuales</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="simuladores" class="section split">
+    <div>
+      <h2>Simuladores &amp; herramientas</h2>
+      <p class="muted">Calcular ROI, puntaje de riesgo y hablar con nuestro chatbot demo.</p>
+      <div id="diagnostico" class="card">
+        <h3>1) Calculadora de ROI</h3>
+        <div class="grid cols-2">
+          <div>
+            <label>Ingresos mensuales (US$)
+              <input id="roi-ingresos" type="number" min="0" value="2500" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:#0b1220;color:var(--text)">
+            </label>
+            <label>Prob. anual de incidente (%)
+              <input id="roi-prob" type="number" min="0" max="100" value="35" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:#0b1220;color:var(--text)">
+            </label>
+            <label>Impacto por incidente (meses de ingreso)
+              <input id="roi-impacto" type="number" min="0" step="0.1" value="1.2" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:#0b1220;color:var(--text)">
+            </label>
+            <label>Costo mensual del plan (US$)
+              <input id="roi-costo" type="number" min="0" value="299" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:#0b1220;color:var(--text)">
+            </label>
+            <button class="btn" onclick="calcROI()">Calcular ROI</button>
+          </div>
+          <div>
+            <div id="roi-out" class="notice" style="min-height:120px">Complete los campos y presione calcular.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>2) Autoevaluación de riesgo</h3>
+        <div class="grid cols-2">
+          <div>
+            <label><input type="checkbox" class="risk" value="25"> Sin MFA en correos críticos</label><br>
+            <label><input type="checkbox" class="risk" value="20"> Sin copias de seguridad externas</label><br>
+            <label><input type="checkbox" class="risk" value="15"> Puertos expuestos sin WAF/VPN</label><br>
+            <label><input type="checkbox" class="risk" value="15"> Usuarios comparten contraseñas</label><br>
+            <label><input type="checkbox" class="risk" value="10"> Equipos sin parches &gt; 60 días</label><br>
+            <label><input type="checkbox" class="risk" value="10"> No existe inventario de activos</label>
+            <div class="muted" style="margin-top:6px">* Puntos más altos = más riesgo</div>
+          </div>
+          <div>
+            <button class="btn" onclick="calcRisk()">Calcular puntaje</button>
+            <div id="risk-out" class="card" style="margin-top:10px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card sticky-card">
+        <h3>3) Chatbot (demo)</h3>
+        <div class="chips" id="chips"></div>
+        <div id="chat" class="chat" aria-live="polite" aria-label="Chatbot demo"></div>
+        <div class="input-row">
+          <input id="chatInput" type="text" placeholder="Escribe tu pregunta…" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:#0b1220;color:var(--text)"/>
+          <button class="btn" onclick="sendChat()">Enviar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="plan-negocio" class="section">
+    <h2>Plan de negocio (resumen) · estilo Shark Tank</h2>
+    <p class="muted">Este bloque cumple con tipo de sociedad, socios, capital inicial, financiamiento, mercado meta, valoración y monto solicitado.</p>
+    <div class="grid cols-3">
+      <div class="card">
+        <h3>Sociedad mercantil</h3>
+        <p><b>Tipo:</b> S.A. de C.V. (recomendado para escalabilidad y entrada de inversionistas).</p>
+        <p><b>Nombre comercial:</b> CiberGuard SV</p>
+      </div>
+      <div class="card">
+        <h3>Socios &amp; aportes</h3>
+        <ul>
+          <li><b>CEO (mayoritario, técnico):</b> dirección y ventas · aporte US$3,000</li>
+          <li><b>CTO (técnico):</b> I+D, playbooks · aporte US$2,000</li>
+          <li><b>COO (operaciones):</b> proyectos y QA · aporte US$1,500</li>
+          <li><b>Socio capitalista:</b> marketing · aporte US$3,500</li>
+          <li><b>Socio comanditario:</b> asesor legal · aporte US$1,000</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Capital inicial &amp; uso</h3>
+        <table class="table">
+          <tr><td>Herramientas (vuln scan, EDR demo)</td><td>US$4,000</td></tr>
+          <tr><td>Marketing y sitio web</td><td>US$2,000</td></tr>
+          <tr><td>Capacitación &amp; certificaciones</td><td>US$2,000</td></tr>
+          <tr><td>Operación (6 meses)</td><td>US$3,000</td></tr>
+          <tr><th>Total</th><th>US$11,000</th></tr>
+        </table>
+      </div>
+    </div>
+    <div class="grid cols-3" style="margin-top:14px">
+      <div class="card">
+        <h3>Fuente de financiamiento</h3>
+        <ul>
+          <li>Fondos propios: US$6,000</li>
+          <li>Capital semilla/inversionista: US$5,000</li>
+          <li>Alterno: pequeño crédito PyME si se requiere flujo</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Mercado meta</h3>
+        <p>PyMEs salvadoreñas (comercio, educación, servicios profesionales) con 5–100 empleados; prioridad: empresas con ventas en línea o manejo de datos sensibles.</p>
+      </div>
+      <div class="card">
+        <h3>Valoración &amp; solicitud</h3>
+        <p><b>Valuación base:</b> US$60,000 (múltiplo 3× ingresos anuales proyectados en año 2).</p>
+        <p><b>Solicitado:</b> US$10,000 por 14% (destinado a marketing, equipamiento y caja).</p>
+      </div>
+    </div>
+    <div class="notice" style="margin-top:14px">Para la defensa: preparar respuestas sobre factibilidad técnica, financiamiento, escalabilidad y mercado meta. (Este sitio incluye simuladores para apoyar la argumentación.)</div>
+  </section>
+
+  <section id="precios" class="section">
+    <h2>Planes</h2>
+    <div class="pricing">
+      <div class="card price-card">
+        <span class="badge">Popular</span>
+        <h3>Start</h3>
+        <div class="price">US$299 <small class="muted">/mes</small></div>
+        <ul>
+          <li>Escaneo mensual básico</li>
+          <li>Capacitación phishing (mensual)</li>
+          <li>Soporte en horario laboral</li>
+        </ul>
+        <button class="btn" onclick="selectPlan('Start',299)">Elegir</button>
+      </div>
+      <div class="card price-card">
+        <h3>Pro</h3>
+        <div class="price">US$599 <small class="muted">/mes</small></div>
+        <ul>
+          <li>Pentesting trimestral</li>
+          <li>Hardening y políticas</li>
+          <li>Soporte extendido</li>
+        </ul>
+        <button class="btn" onclick="selectPlan('Pro',599)">Elegir</button>
+      </div>
+      <div class="card price-card">
+        <h3>Enterprise</h3>
+        <div class="price">A medida</div>
+        <ul>
+          <li>Integración SIEM/EDR (demo)</li>
+          <li>Playbooks personalizados</li>
+          <li>Soporte 24/7</li>
+        </ul>
+        <button class="btn" onclick="selectPlan('Enterprise','custom')">Cotizar</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="clientes" class="section">
+    <h2>Casos (demo)</h2>
+    <div class="grid cols-3">
+      <div class="card"><h3>Comercio en línea</h3><p class="muted">Reducción 80% intentos de phishing. Implementación MFA y backup 3‑2‑1.</p></div>
+      <div class="card"><h3>Institución educativa</h3><p class="muted">Segmentación de red y capacitación a docentes. Cero incidentes en 6 meses.</p></div>
+      <div class="card"><h3>Despacho legal</h3><p class="muted">Cifrado en reposo y tránsito, control de accesos y NDAs.</p></div>
+    </div>
+  </section>
+
+  <section id="faq" class="section">
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq grid cols-2">
+      <details open>
+        <summary>¿Cómo prueban la seguridad?</summary>
+        <div>Usamos metodología OWASP y buenas prácticas (CIS, NIST). El alcance se acuerda por contrato y nunca excede los permisos.</div>
+      </details>
+      <details>
+        <summary>¿Qué pasa si ocurre un incidente?</summary>
+        <div>Activamos playbooks de contención, comunicación y forense básico. Trabajamos con su equipo hasta cerrar el incidente.</div>
+      </details>
+      <details>
+        <summary>¿Necesito contrato anual?</summary>
+        <div>Los planes Start/Pro son mensuales cancelables. Enterprise se cotiza por proyecto o SLA.</div>
+      </details>
+      <details>
+        <summary>¿Cómo manejan datos sensibles?</summary>
+        <div>Principios mínimos privilegios, retención limitada y cifrado. No recolectamos más de lo necesario.</div>
+      </details>
+    </div>
+  </section>
+
+  <section id="contacto" class="section split">
+    <div>
+      <h2>Solicitar cotización</h2>
+      <p class="muted">Este formulario guarda tu interés en tu navegador (localStorage). Puedes exportarlo como JSON.</p>
+      <div class="card">
+        <label>Nombre<input id="f-nombre" placeholder="Tu nombre" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:#0b1220;color:var(--text)"></label>
+        <label>Correo<input id="f-correo" placeholder="tu@empresa.com" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:#0b1220;color:var(--text)"></label>
+        <label>Empresa<input id="f-empresa" placeholder="Nombre de la empresa" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:#0b1220;color:var(--text)"></label>
+        <label>Plan seleccionado<input id="f-plan" readonly style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:#0b1220;color:var(--text)" placeholder="—"></label>
+        <button class="btn" onclick="guardarLead()">Guardar (demo)</button>
+        <button class="btn secondary" onclick="exportarLeads()">Exportar JSON</button>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Cobertura</h3>
+        <p class="muted">Atendemos en todo El Salvador — presencial en AMSS y oriente; remoto nacional.</p>
+        <div class="chips">
+          <span class="chip">San Salvador</span>
+          <span class="chip">La Libertad</span>
+          <span class="chip">Santa Ana</span>
+          <span class="chip">San Miguel</span>
+          <span class="chip">Sonsonate</span>
+          <span class="chip">Usulután</span>
+        </div>
+      </div>
+      <div id="msg" style="margin-top:10px"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="grid cols-3">
+      <div>
+        <div class="brand">🔐 CiberGuard SV</div>
+        <div class="muted">© <span id="year"></span> — Demo educativa. HTML/CSS/JS puro.</div>
+      </div>
+      <div>
+        <div class="muted">Políticas: uso aceptable, privacidad mínima, no retención innecesaria de datos.</div>
+      </div>
+      <div style="text-align:right">
+        <a href="#inicio" class="muted">Volver arriba ↑</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Tema
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('change',()=>{
+    document.body.style.background = themeToggle.checked ? '#f8fafc' : getComputedStyle(document.documentElement).getPropertyValue('--bg');
+    document.body.style.color = themeToggle.checked ? '#0b1220' : 'var(--text)';
+  });
+
+  // Año
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ROI
+  function money(n){return new Intl.NumberFormat('es-SV',{style:'currency',currency:'USD'}).format(n)}
+  function calcROI(){
+    const ingresos = +document.getElementById('roi-ingresos').value;
+    const prob = (+document.getElementById('roi-prob').value)/100;
+    const impactoMeses = +document.getElementById('roi-impacto').value;
+    const costo = +document.getElementById('roi-costo').value;
+    const perdidasEsperadas = ingresos * impactoMeses * prob; // EV básico
+    const ahorro = Math.max(perdidasEsperadas - costo, 0);
+    const roi = costo>0 ? (ahorro / costo) : 0;
+    const paybackMeses = ahorro>0 ? (costo / (ahorro/12)) : Infinity;
+    document.getElementById('roi-out').innerHTML = `
+      <b>Ahorro esperado anual:</b> ${money(ahorro)}<br>
+      <b>ROI estimado:</b> ${(roi*100).toFixed(1)}%<br>
+      <b>Payback:</b> ${isFinite(paybackMeses)? paybackMeses.toFixed(1)+ ' meses': '—'}
+    `;
+  }
+
+  // Riesgo
+  function calcRisk(){
+    const checks = [...document.querySelectorAll('.risk:checked')].map(el=>+el.value);
+    const score = checks.reduce((a,b)=>a+b,0);
+    let nivel = 'Bajo', cls='notice';
+    if(score>=60){nivel='Crítico';cls='danger'} else if(score>=30){nivel='Alto'} else if(score>=15){nivel='Medio'}
+    document.getElementById('risk-out').className = 'card '+(cls==='danger'?'danger':'');
+    document.getElementById('risk-out').innerHTML = `<b>Puntaje:</b> ${score} · <b>Nivel:</b> ${nivel}<br><small class='muted'>Recomendación: habilitar MFA, backups externos y parchar equipos prioritarios.</small>`
+  }
+
+  // Plan seleccionado
+  function selectPlan(nombre, precio){
+    document.getElementById('f-plan').value = precio==='custom'? `${nombre} — a medida` : `${nombre} — ${money(precio)}/mes`;
+    document.getElementById('contacto').scrollIntoView({behavior:'smooth'});
+  }
+
+  // Leads (demo localStorage)
+  function guardarLead(){
+    const lead = {
+      nombre: document.getElementById('f-nombre').value.trim(),
+      correo: document.getElementById('f-correo').value.trim(),
+      empresa: document.getElementById('f-empresa').value.trim(),
+      plan: document.getElementById('f-plan').value
+    };
+    if(!lead.nombre || !lead.correo){
+      document.getElementById('msg').innerHTML = `<div class='danger' style='padding:10px;border-radius:12px'>Completa nombre y correo.</div>`; return;
+    }
+    const leads = JSON.parse(localStorage.getItem('ciberguard_leads')||'[]');
+    leads.push({...lead, created_at: new Date().toISOString()});
+    localStorage.setItem('ciberguard_leads', JSON.stringify(leads));
+    document.getElementById('msg').innerHTML = `<div class='notice' style='padding:10px;border-radius:12px'>Guardado en tu navegador. Usa "Exportar JSON" para descargar.</div>`;
+  }
+  function exportarLeads(){
+    const data = localStorage.getItem('ciberguard_leads') || '[]';
+    const blob = new Blob([data], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'leads_ciberguard.json';
+    a.click();
+  }
+
+  
+  // === Chatbot CiberGuard (vanilla JS, sin dependencias) ===
+  // Mejores coincidencias (acentos/variantes), comandos (/help, /limpiar, /export),
+  // "escribiendo…" simulado, respuestas con puntaje, e historial en localStorage.
+
+  // Utilidades
+  const norm = s =>
+    s.toLowerCase()
+     .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // quita acentos
+     .replace(/[^\w\s@.\-]/g,'')                      // limpia rarezas
+     .trim();
+
+  const scoreMatch = (text, kws) => {
+    const t = norm(text);
+    return kws.reduce((acc,k)=> acc + (t.includes(norm(k)) ? 1 : 0), 0);
+  };
+
+  // Conocimiento base (puedes editar/añadir)
+  const knowledge = [
+    { k: ['precio','costo','plan','planes','cuanto'], a:
+      'Planes: Start (US$299/mes), Pro (US$599/mes) y Enterprise a medida. Revisa la sección “Precios”.' },
+    { k: ['pentest','prueba','penetracion','owasp','pentesting'], a:
+      'Pentest según alcance (web/API) con enfoque OWASP; incluye reporte ejecutivo/técnico y re-test sin costo.' },
+    { k: ['incidente','ransom','ransomware','ataque','malware','forense'], a:
+      'Respuesta a incidentes: contención, análisis forense básico, recuperación y lecciones aprendidas (SLA típico 72h).' },
+    { k: ['cumplimiento','iso','27001','nist','cis','politicas'], a:
+      'Mapeamos controles contra ISO/IEC 27001, NIST CSF y CIS Controls, priorizando riesgos de mayor impacto.' },
+    { k: ['mfa','2fa','doble','factor','autenticacion'], a:
+      'Activa MFA en correo y accesos críticos; es de las medidas con mejor costo/beneficio.' },
+    { k: ['contacto','correo','email','cotizar'], a:
+      'Completa el formulario en “Solicitar cotización” o escribe a demo@ciberguard.sv (placeholder).' },
+  ];
+
+  // Respuestas de apoyo si no hay match alto
+  const fallbacks = [
+    'Puedo ayudarte con precios, pentesting, incidentes o cumplimiento. Prueba con otra pregunta 😊',
+    '¿Buscas info de planes (Start/Pro/Enterprise), pentest u hojas de ruta de cumplimiento?',
+    'Si necesitas una cotización, deja tus datos en el formulario de “Solicitar cotización”.'
+  ];
+
+  // Quick replies (chips)
+  const chips = [
+    '¿Cómo funciona el pentest?','¿Qué incluye el plan Pro?',
+    '¿Tienen respuesta a incidentes?','¿Usan ISO 27001?','¿Cuánto cuesta?','¿Por dónde empiezo?'
+  ];
+
+  // DOM
+  const chatBox  = document.getElementById('chat');
+  const chipsBox = document.getElementById('chips');
+  const inputEl  = document.getElementById('chatInput');
+
+  // Historial (persistencia local)
+  const HIST_KEY = 'cg_chat_history';
+  const loadHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+  const saveHist = (role, text) => {
+    const h = loadHist(); h.push({ role, text, ts: Date.now() });
+    if (h.length > 200) h.shift();
+    localStorage.setItem(HIST_KEY, JSON.stringify(h));
+  };
+  const clearHist = () => localStorage.removeItem(HIST_KEY);
+
+  // UI helpers
+  const renderMsg = (role, text) => {
+    const row = document.createElement('div');
+    row.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    b.textContent = text;
+    row.appendChild(b);
+    chatBox.appendChild(row);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+
+  let typingEl = null;
+  const typing = (on=true) => {
+    if (on) {
+      typingEl = document.createElement('div');
+      typingEl.className = 'msg bot';
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      b.textContent = 'Escribiendo…';
+      typingEl.appendChild(b);
+      chatBox.appendChild(typingEl);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    } else if (typingEl) {
+      typingEl.remove(); typingEl = null;
+    }
+  };
+
+  // Lógica principal
+  const pickAnswer = (text) => {
+    // 1) Puntuar por número de palabras clave contenidas
+    let best = { s: 0, a: null };
+    for (const item of knowledge) {
+      const s = scoreMatch(text, item.k);
+      if (s > best.s) best = { s, a: item.a };
+    }
+    // 2) Umbral mínimo (>=1 match) o fallback
+    if (best.s >= 1) return best.a;
+    return fallbacks[Math.floor(Math.random()*fallbacks.length)];
+  };
+
+  const respond = (text) => {
+    typing(true);
+    setTimeout(() => {
+      typing(false);
+      const ans = pickAnswer(text);
+      renderMsg('bot', ans);
+      saveHist('bot', ans);
+    }, 380);
+  };
+
+  const chatSay = (text, user=false) => {
+    renderMsg(user ? 'user' : 'bot', text);
+    saveHist(user ? 'user' : 'bot', text);
+    if (user) {
+      // Comandos
+      const t = norm(text);
+      if (t === '/help') {
+        const help = 'Comandos: /help · /limpiar · /export\nTips: pregunta por “precios”, “pentest”, “incidente”, “ISO 27001”, “MFA”…';
+        renderMsg('bot', help); saveHist('bot', help); return;
+      }
+      if (t === '/limpiar') {
+        clearHist(); chatBox.innerHTML = '';
+        const msg = 'Historial limpiado. ¿En qué te ayudo hoy?';
+        renderMsg('bot', msg); saveHist('bot', msg); return;
+      }
+      if (t === '/export') {
+        const data = JSON.stringify(loadHist(), null, 2);
+        const blob = new Blob([data], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'chat_ciberguard.json';
+        a.click();
+        return;
+      }
+      // Respuesta normal
+      respond(text);
+    }
+  };
+
+  // Envío
+  function sendChat(){
+    const text = inputEl.value.trim();
+    if (!text) return;
+    inputEl.value = '';
+    chatSay(text, true);
+  }
+
+  // Chips
+  chips.forEach(t => {
+    const c = document.createElement('button');
+    c.className = 'chip'; c.textContent = t;
+    c.onclick = () => chatSay(t, true);
+    chipsBox.appendChild(c);
+  });
+
+  // Mensaje inicial / restaurar historial
+  (function init(){
+    const hist = loadHist();
+    if (hist.length) {
+      hist.forEach(m => renderMsg(m.role, m.text));
+    } else {
+      chatSay('👋 Hola, soy el asistente de CiberGuard SV. Escribe /help para ver comandos o pregúntame por precios, pentesting o incidentes.');
+    }
+  })();
+
+  // Accesibilidad: Enter envía
+  inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
+
+  // Expone sendChat si tu botón usa onclick="sendChat()"
+  window.sendChat = sendChat;
+</script>
+
+</body>
+</html>

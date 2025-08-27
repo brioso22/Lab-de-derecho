@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CiberGuard SV — Inicializando…</title>
+  <style>
+    body{margin:0;height:100vh;display:flex;justify-content:center;align-items:center;background:#05080f;color:#e5e7eb;font-family:'Inter',sans-serif;overflow:hidden}
+    .wrap{text-align:center}
+    .logo{font-size:2rem;font-weight:800;color:#00e5ff;margin-bottom:20px;animation:glitch 1s infinite alternate}
+    @keyframes glitch{0%{text-shadow:2px 0 #8a5cff;}50%{text-shadow:-2px 0 #00e5ff;}100%{text-shadow:2px 0 #8a5cff;}}
+    .bar{width:300px;height:14px;background:#1e293b;border-radius:999px;overflow:hidden;margin:0 auto}
+    .fill{height:100%;width:0%;background:linear-gradient(90deg,#00e5ff,#8a5cff);transition:width .2s ease}
+    .status{margin-top:12px;font-size:.9rem;color:#9ca3af}
+    canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:.25}
+  </style>
+</head>
+<body>
+  <canvas id="rain"></canvas>
+  <div class="wrap">
+    <div class="logo">CiberGuard SV</div>
+    <div class="bar"><div class="fill" id="fill"></div></div>
+    <div class="status" id="status">Inicializando entorno seguro…</div>
+  </div>
+
+  <script>
+    // Matrix rain
+    const canvas=document.getElementById('rain'),ctx=canvas.getContext('2d');
+    let w,h,cols,ypos;
+    function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;cols=Math.floor(w/16);ypos=Array(cols).fill(0);}resize();window.addEventListener('resize',resize);
+    const chars='010101010101011001100101010111000110101';
+    function draw(){ctx.fillStyle='rgba(5,8,15,.15)';ctx.fillRect(0,0,w,h);ctx.fillStyle='#00e5ff';ctx.font='16px monospace';for(let i=0;i<cols;i++){const t=chars[Math.floor(Math.random()*chars.length)];ctx.fillText(t,i*16,ypos[i]*16);if(ypos[i]*16>h&&Math.random()>.975){ypos[i]=0}else ypos[i]++;}requestAnimationFrame(draw);}draw();
+
+    // Loader
+    const fill=document.getElementById('fill');
+    const status=document.getElementById('status');
+    const steps=['Handshake TLS','Activando WAF','Inicializando SIEM','Habilitando MFA','Checklist final'];
+    let progress=0,step=0;
+    function load(){progress+=Math.random()*20+15;fill.style.width=Math.min(100,progress)+'%';if(progress>=(step+1)*20&&step<steps.length){status.textContent=steps[step];step++;}
+      if(progress>=100){setTimeout(()=>window.location.href='home.html',1200);}else{setTimeout(load,250);} }
+    setTimeout(load,400);
+  </script>
+</body>
+</html>
