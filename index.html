@@ -13,12 +13,14 @@
     .fill{height:100%;width:0%;background:linear-gradient(90deg,#00e5ff,#8a5cff);transition:width .2s ease}
     .status{margin-top:12px;font-size:.9rem;color:#9ca3af}
     canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:.25}
+    /* Respeta accesibilidad */
+    @media (prefers-reduced-motion: reduce){.logo{animation:none}}
   </style>
 </head>
 <body>
   <canvas id="rain"></canvas>
   <div class="wrap">
-    <div class="logo">CiberGuard </div>
+    <div class="logo">CiberGuard</div>
     <div class="bar"><div class="fill" id="fill"></div></div>
     <div class="status" id="status">Inicializando entorno seguro…</div>
   </div>
@@ -31,12 +33,15 @@
     const chars='010101010101011001100101010111000110101';
     function draw(){ctx.fillStyle='rgba(5,8,15,.15)';ctx.fillRect(0,0,w,h);ctx.fillStyle='#00e5ff';ctx.font='16px monospace';for(let i=0;i<cols;i++){const t=chars[Math.floor(Math.random()*chars.length)];ctx.fillText(t,i*16,ypos[i]*16);if(ypos[i]*16>h&&Math.random()>.975){ypos[i]=0}else ypos[i]++;}requestAnimationFrame(draw);}draw();
 
-    // Loader
+    // Loader (rápido, redirige a home.html)
     const fill=document.getElementById('fill');
     const status=document.getElementById('status');
     const steps=['Handshake TLS','Activando WAF','Inicializando SIEM','Habilitando MFA','Checklist final'];
     let progress=0,step=0;
-    function load(){progress+=Math.random()*20+15;fill.style.width=Math.min(100,progress)+'%';if(progress>=(step+1)*20&&step<steps.length){status.textContent=steps[step];step++;}
+    function load(){
+      progress+=Math.random()*20+15; // ~25% por tick
+      fill.style.width=Math.min(100,progress)+'%';
+      if(progress>=(step+1)*20&&step<steps.length){status.textContent=steps[step];step++;}
       if(progress>=100){setTimeout(()=>window.location.href='home.html',1200);}else{setTimeout(load,250);} }
     setTimeout(load,400);
   </script>
