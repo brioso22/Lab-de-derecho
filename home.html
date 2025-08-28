@@ -24,7 +24,7 @@
     .brand{display:flex;gap:.6rem;align-items:center;font-weight:800;letter-spacing:.4px}
     .brand svg{width:26px;height:26px}
     .navlinks{display:flex;gap:1rem;align-items:center}
-    .btn, button{background:var(--grad);color:#fff;border:none;border-radius:999px;padding:.7rem 1rem;font-weight:600;cursor:pointer;box-shadow:var(--shadow);}
+    .btn, button{background:var(--grad);color:#fff;border:none;border-radius:999px;padding:.7rem 1rem;font-weight:600;cursor:pointer;box-shadow:var(--shadow);}    
     .btn.secondary{background:transparent;border:1px solid rgba(148,163,184,.3)}
     .hero{padding:72px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center}
     .hero h1{font-size:clamp(28px, 3.8vw, 52px);line-height:1.05;margin:.2rem 0}
@@ -93,7 +93,7 @@
     <nav>
       <a href="#inicio" class="brand" aria-label="Ir al inicio">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 14.5a1 1 0 0 1-2 0V13a1 1 0 0 1 2 0Zm-1-9a1.5 1.5 0 1 1-1.5 1.5A1.5 1.5 0 0 1 12 7.5Z"/></svg>
-        CiberGuard <span class="muted">SV</span>
+        CiberGuard
       </a>
       <div class="navlinks">
         <a href="criptografia.html">Criptografia</a>
@@ -238,7 +238,7 @@
       <div class="card">
         <h3>Sociedad mercantil</h3>
         <p><b>Tipo:</b> S.A. de C.V. (recomendado para escalabilidad y entrada de inversionistas).</p>
-        <p><b>Nombre comercial:</b> CiberGuard SV</p>
+        <p><b>Nombre comercial:</b> CiberGuard</p>
       </div>
       <div class="card">
         <h3>Socios &amp; aportes</h3>
@@ -386,7 +386,7 @@
   <div class="container">
     <div class="grid cols-3">
       <div>
-        <div class="brand">🔐 CiberGuard SV</div>
+        <div class="brand">🔐 CiberGuard</div>
         <div class="muted">© <span id="year"></span> — Demo educativa. HTML/CSS/JS puro.</div>
       </div>
       <div>
@@ -469,16 +469,12 @@
     a.click();
   }
 
-  
   // === Chatbot CiberGuard (vanilla JS, sin dependencias) ===
-  // Mejores coincidencias (acentos/variantes), comandos (/help, /limpiar, /export),
-  // "escribiendo…" simulado, respuestas con puntaje, e historial en localStorage.
-
   // Utilidades
   const norm = s =>
     s.toLowerCase()
-     .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // quita acentos
-     .replace(/[^\w\s@.\-]/g,'')                      // limpia rarezas
+     .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+     .replace(/[^\w\s@.\-]/g,'')
      .trim();
 
   const scoreMatch = (text, kws) => {
@@ -486,7 +482,6 @@
     return kws.reduce((acc,k)=> acc + (t.includes(norm(k)) ? 1 : 0), 0);
   };
 
-  // Conocimiento base (puedes editar/añadir)
   const knowledge = [
     { k: ['precio','costo','plan','planes','cuanto'], a:
       'Planes: Start (US$299/mes), Pro (US$599/mes) y Enterprise a medida. Revisa la sección “Precios”.' },
@@ -502,25 +497,21 @@
       'Completa el formulario en “Solicitar cotización” o escribe a demo@ciberguard.sv (placeholder).' },
   ];
 
-  // Respuestas de apoyo si no hay match alto
   const fallbacks = [
     'Puedo ayudarte con precios, pentesting, incidentes o cumplimiento. Prueba con otra pregunta 😊',
     '¿Buscas info de planes (Start/Pro/Enterprise), pentest u hojas de ruta de cumplimiento?',
     'Si necesitas una cotización, deja tus datos en el formulario de “Solicitar cotización”.'
   ];
 
-  // Quick replies (chips)
   const chips = [
     '¿Cómo funciona el pentest?','¿Qué incluye el plan Pro?',
     '¿Tienen respuesta a incidentes?','¿Usan ISO 27001?','¿Cuánto cuesta?','¿Por dónde empiezo?'
   ];
 
-  // DOM
   const chatBox  = document.getElementById('chat');
   const chipsBox = document.getElementById('chips');
   const inputEl  = document.getElementById('chatInput');
 
-  // Historial (persistencia local)
   const HIST_KEY = 'cg_chat_history';
   const loadHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
   const saveHist = (role, text) => {
@@ -530,7 +521,6 @@
   };
   const clearHist = () => localStorage.removeItem(HIST_KEY);
 
-  // UI helpers
   const renderMsg = (role, text) => {
     const row = document.createElement('div');
     row.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
@@ -558,15 +548,12 @@
     }
   };
 
-  // Lógica principal
   const pickAnswer = (text) => {
-    // 1) Puntuar por número de palabras clave contenidas
     let best = { s: 0, a: null };
     for (const item of knowledge) {
       const s = scoreMatch(text, item.k);
       if (s > best.s) best = { s, a: item.a };
     }
-    // 2) Umbral mínimo (>=1 match) o fallback
     if (best.s >= 1) return best.a;
     return fallbacks[Math.floor(Math.random()*fallbacks.length)];
   };
@@ -585,7 +572,6 @@
     renderMsg(user ? 'user' : 'bot', text);
     saveHist(user ? 'user' : 'bot', text);
     if (user) {
-      // Comandos
       const t = norm(text);
       if (t === '/help') {
         const help = 'Comandos: /help · /limpiar · /export\nTips: pregunta por “precios”, “pentest”, “incidente”, “ISO 27001”, “MFA”…';
@@ -605,12 +591,10 @@
         a.click();
         return;
       }
-      // Respuesta normal
       respond(text);
     }
   };
 
-  // Envío
   function sendChat(){
     const text = inputEl.value.trim();
     if (!text) return;
@@ -618,7 +602,6 @@
     chatSay(text, true);
   }
 
-  // Chips
   chips.forEach(t => {
     const c = document.createElement('button');
     c.className = 'chip'; c.textContent = t;
@@ -626,22 +609,19 @@
     chipsBox.appendChild(c);
   });
 
-  // Mensaje inicial / restaurar historial
   (function init(){
     const hist = loadHist();
     if (hist.length) {
       hist.forEach(m => renderMsg(m.role, m.text));
     } else {
-      chatSay('👋 Hola, soy el asistente de CiberGuard SV. Escribe /help para ver comandos o pregúntame por precios, pentesting o incidentes.');
+      chatSay('👋 Hola, soy el asistente de CiberGuard. Escribe /help para ver comandos o pregúntame por precios, pentesting o incidentes.');
     }
   })();
 
-  // Accesibilidad: Enter envía
   inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
-
-  // Expone sendChat si tu botón usa onclick="sendChat()"
   window.sendChat = sendChat;
 </script>
 
 </body>
 </html>
+
