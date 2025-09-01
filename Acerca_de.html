@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sobre nosotros — CiberGuard</title>
+  <meta name="description" content="Conoce a CiberGuard: misión, equipo del proyecto (alumnos), valores, metodología y trabajo con PyMEs. 100% HTML/CSS/JS." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{ --bg:#0b1220; --card:#0f172a; --muted:#94a3b8; --text:#e5e7eb; --brand:#0ea5e9; --brand-2:#6366f1; --radius:16px; --grad:linear-gradient(135deg,var(--brand),var(--brand-2)); --shadow:0 10px 30px rgba(0,0,0,.25); }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:'Inter',system-ui,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(1200px 600px at 10% -10%, rgba(14,165,233,.15), transparent), radial-gradient(900px 500px at 110% -20%, rgba(99,102,241,.15), transparent), var(--bg);color:var(--text)}
+    a{color:var(--text);text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
+    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(8px);background:rgba(11,18,32,.6);z-index:50;border-bottom:1px solid rgba(148,163,184,.15)}
+    nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:.6rem;align-items:center;font-weight:800;letter-spacing:.4px}
+    .brand svg{width:26px;height:26px}
+    .navlinks{display:flex;gap:1rem;align-items:center}
+    .btn{background:var(--grad);color:#fff;border:none;border-radius:999px;padding:.7rem 1rem;font-weight:700;cursor:pointer;box-shadow:var(--shadow)}
+    .btn.secondary{background:transparent;border:1px solid rgba(148,163,184,.3)}
+    .pill{display:inline-flex;gap:8px;align-items:center;padding:.32rem .6rem;border:1px solid rgba(148,163,184,.2);border-radius:999px;color:var(--muted);font-weight:600;font-size:.8rem}
+    .hero{padding:72px 0 32px;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
+    .hero h1{font-size:clamp(28px,3.8vw,48px);line-height:1.05;margin:.2rem 0}
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));padding:22px;border-radius:var(--radius);border:1px solid rgba(148,163,184,.15)}
+    .grid{display:grid;gap:18px}
+    .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .grid.cols-4{grid-template-columns:repeat(4,1fr)}
+    .card{background:var(--card);border:1px solid rgba(148,163,184,.15);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+    .muted{color:var(--muted)}
+    .values{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .team{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+    .avatar{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:rgba(148,163,184,.15);font-weight:800}
+    .inline{display:inline-flex;gap:10px;align-items:center}
+    .footer{padding:30px 0;border-top:1px solid rgba(148,163,184,.15)}
+    .section{padding:40px 0}
+    .timeline{position:relative;padding-left:22px}
+    .timeline:before{content:"";position:absolute;left:10px;top:0;bottom:0;width:2px;background:rgba(148,163,184,.25)}
+    .tlitem{position:relative;margin:8px 0;padding-left:12px}
+    .tlitem:before{content:"";position:absolute;left:-2px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--brand)}
+    @media (max-width: 1120px){.team{grid-template-columns:repeat(2,1fr)}.values{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}}
+    @media print{header,.btn{display:none}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <nav>
+      <a href="home.html" class="brand" aria-label="Ir a inicio">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 14.5a1 1 0 0 1-2 0V13a1 1 0 0 1 2 0Zm-1-9a1.5 1.5 0 1 1-1.5 1.5A1.5 1.5 0 0 1 12 7.5Z"/></svg>
+        CiberGuard
+      </a>
+      <div class="navlinks">
+        <a href="home.html#servicios">Servicios</a>
+        <a href="criptografia.html">Criptografía</a>
+        <a href="contrasenas.html">Contraseñas</a>
+        <span class="pill">Sobre nosotros</span>
+        <button class="btn" onclick="location.href='home.html#contacto'">Cotizar</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div>
+      <span class="pill">Quiénes somos</span>
+      <h1>Personas de tecnología ayudando a PyMEs a estar <span style="background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent">más seguras</span></h1>
+      <p class="muted">CiberGuard es un proyecto educativo y técnico que impulsa ciberseguridad práctica: medidas que realmente se implementan y se sostienen (MFA, hardening, backup 3‑2‑1, capacitación y pentesting).</p>
+      <div class="grid cols-3 hero-card" style="margin-top:12px">
+        <div class="card" style="background:transparent;border-style:dashed"><b>Foco:</b> PyMEs salvadoreñas y de la región</div>
+        <div class="card" style="background:transparent;border-style:dashed"><b>Modelo:</b> Servicios + simuladores web 100% front‑end</div>
+        <div class="card" style="background:transparent;border-style:dashed"><b>Stack:</b> HTML/CSS/JS (GitHub Pages)</div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3 style="margin:0">Misión & visión</h3>
+      <div class="grid cols-2">
+        <div class="card" style="background:transparent;border-style:dashed">
+          <h4>Misión</h4>
+          <p>Reducir de forma medible el riesgo cibernético de las PyMEs mediante pentesting, hardening, monitoreo y formación continua.</p>
+        </div>
+        <div class="card" style="background:transparent;border-style:dashed">
+          <h4>Visión</h4>
+          <p>Ser el aliado regional más confiable para que cualquier PyME pueda operar con seguridad a un costo justo.</p>
+        </div>
+      </div>
+      <div class="muted" style="margin-top:8px">Esta es una demo educativa 100% front‑end.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Qué hacemos</h2>
+    <div class="grid cols-4">
+      <div class="card"><h3>Pentesting</h3><p class="muted">Pruebas web/API con enfoque OWASP; reporte ejecutivo/técnico y re‑test.</p></div>
+      <div class="card"><h3>Hardening</h3><p class="muted">MFA, parches, mínimos privilegios, copias 3‑2‑1 y segmentación.</p></div>
+      <div class="card"><h3>Respuesta a incidentes</h3><p class="muted">Playbooks de contención, forense básico y restauración segura.</p></div>
+      <div class="card"><h3>Formación</h3><p class="muted">Capacitación breve y recurrente; simuladores y materiales prácticos.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Equipo del proyecto (alumnos)</h2>
+    <p class="muted">Roles asignados según el documento: liderazgo técnico, operaciones y apoyo especializado.</p>
+    <div class="team">
+      <div class="card"><div class="inline"><div class="avatar">KF</div><div><b>Katherine Verenice Fuentes Rivera</b><div class="muted">CEO · Ventas técnicas</div></div></div><ul><li>Gobierno de TI, clientes PyME</li><li>Coordinación comercial</li></ul></div>
+      <div class="card"><div class="inline"><div class="avatar">MB</div><div><b>Marcos Isaí Brioso Benavides</b><div class="muted">CTO · Pentesting</div></div></div><ul><li>OWASP, redes, Linux</li><li>Playbooks de respuesta</li></ul></div>
+      <div class="card"><div class="inline"><div class="avatar">MH</div><div><b>Marcela Nohemy Hernández Villatoro</b><div class="muted">COO · Proyectos</div></div></div><ul><li>Gestión ágil y QA</li><li>Capacitación usuarios</li></ul></div>
+      <div class="card"><div class="inline"><div class="avatar">JO</div><div><b>Jhoan Mauricio Ortega Ventura</b><div class="muted">Growth/Marketing</div></div></div><ul><li>Estrategia de adquisición</li><li>Contenido y campañas</li></ul></div>
+      <div class="card"><div class="inline"><div class="avatar">SS</div><div><b>Saúl Salomón Soto Machuca</b><div class="muted">Asesoría · Compliance</div></div></div><ul><li>Buenas prácticas y ética</li><li>Políticas internas</li></ul></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Metodología</h2>
+    <div class="grid cols-4">
+      <div class="card"><h3>1) Evaluar</h3><p class="muted">Entrevista, inventario, escaneo y mapa de riesgos.</p></div>
+      <div class="card"><h3>2) Priorizar</h3><p class="muted">Quick wins y controles base (MFA, backup, parches).</p></div>
+      <div class="card"><h3>3) Implementar</h3><p class="muted">Hardening, políticas, capacitación y simulacros.</p></div>
+      <div class="card"><h3>4) Medir</h3><p class="muted">KPIs trimestrales y re‑test de validación.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Valores</h2>
+    <div class="values">
+      <div class="card"><h3>Integridad</h3><p class="muted">Pruebas solo con autorización. Datos mínimos necesarios.</p></div>
+      <div class="card"><h3>Simplicidad</h3><p class="muted">Controles que tu equipo puede mantener.</p></div>
+      <div class="card"><h3>Aprendizaje</h3><p class="muted">Formación breve y continua.</p></div>
+      <div class="card"><h3>Acción</h3><p class="muted">Avance trimestral medible.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Nuestra historia</h2>
+    <div class="card timeline">
+      <div class="tlitem"><b>2023</b> — Primeros proyectos de phishing simulado y hardening.</div>
+      <div class="tlitem"><b>2024</b> — Pentesting web/API y simulacros de respuesta a incidentes.</div>
+      <div class="tlitem"><b>2025</b> — Laboratorio web de criptografía y generador de contraseñas (demo).</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Preguntas frecuentes</h2>
+    <div class="grid cols-2">
+      <details class="card" open><summary><b>¿Trabajan solo en El Salvador?</b></summary><div class="muted">Atendemos remoto en todo el país y región; presencial en AMSS y oriente.</div></details>
+      <details class="card"><summary><b>¿Cómo reportan resultados?</b></summary><div class="muted">Reporte ejecutivo y técnico, plan de remediación y re‑test.</div></details>
+      <details class="card"><summary><b>¿Cuáles son los pilares técnicos?</b></summary><div class="muted">MFA, backups 3‑2‑1, parches, mínimos privilegios, segmentación, cifrado.</div></details>
+      <details class="card"><summary><b>¿Qué herramientas muestran?</b></summary><div class="muted">Criptografía en el navegador, generador/verificador de contraseñas y chatbot demo.</div></details>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="card" style="display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap">
+      <div>
+        <h3>¿Hablamos?</h3>
+        <p class="muted">Cuéntanos tu caso y en menos de 1 día hábil te proponemos un plan inicial.</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <a class="btn" href="home.html#contacto">Solicitar cotización</a>
+        <a class="btn secondary" href="home.html#simuladores">Probar simuladores</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="grid cols-3">
+      <div>
+        <div class="brand">🔐 CiberGuard</div>
+        <div class="muted">© <span id="year"></span> — Demo educativa. HTML/CSS/JS puro.</div>
+      </div>
+      <div class="muted">Accesibilidad: alto contraste, navegación por teclado, animaciones moderadas.</div>
+      <div style="text-align:right"><a href="#" class="muted" onclick="window.scrollTo({top:0,behavior:'smooth'})">Volver arriba ↑</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
