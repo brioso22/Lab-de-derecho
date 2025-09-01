@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contraseñas seguras — CiberGuard </title>
+  <meta name="description" content="Genera contraseñas seguras y verifica la fortaleza de una contraseña. Calcula entropía estimada y tiempo de crackeo. 100% HTML/CSS/JS." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{ --bg:#0b1220; --card:#0f172a; --muted:#94a3b8; --text:#e5e7eb; --brand:#0ea5e9; --brand-2:#6366f1; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --radius:16px; }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:'Inter',system-ui,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(1200px 600px at 10% -10%, rgba(14,165,233,.15), transparent), radial-gradient(900px 500px at 110% -20%, rgba(99,102,241,.15), transparent), var(--bg);color:var(--text)}
+    a{color:var(--text);text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
+    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(8px);background:rgba(11,18,32,.6);z-index:50;border-bottom:1px solid rgba(148,163,184,.15)}
+    nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:.6rem;align-items:center;font-weight:800;letter-spacing:.4px}
+    .brand svg{width:26px;height:26px}
+    .navlinks{display:flex;gap:1rem;align-items:center}
+    .btn{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;border:none;border-radius:999px;padding:.7rem 1rem;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .btn.secondary{background:transparent;border:1px solid rgba(148,163,184,.3);color:var(--text)}
+    .hero{padding:48px 0 22px}
+    .hero h1{font-size:clamp(26px,3.2vw,42px);margin:.2rem 0}
+    .muted{color:var(--muted)}
+    .grid{display:grid;gap:18px}
+    .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+    .card{background:var(--card);border:1px solid rgba(148,163,184,.15);border-radius:var(--radius);padding:18px}
+    input[type="text"],input[type="password"],textarea,select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:#0b1220;color:var(--text)}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .copy{border:1px solid rgba(148,163,184,.35);background:rgba(148,163,184,.05);color:var(--text);padding:8px 10px;border-radius:10px;font-weight:700;cursor:pointer}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "JetBrains Mono", Consolas, "Liberation Mono", monospace; font-size:1rem}
+    .meter{height:12px;border-radius:999px;background:rgba(148,163,184,.2);overflow:hidden}
+    .meter > span{display:block;height:100%;width:0%;background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e,#22d3ee);transition:width .25s ease}
+    .tips{font-size:.95rem;color:var(--muted)}
+    .tag{display:inline-flex;gap:8px;align-items:center;padding:.32rem .6rem;border:1px solid rgba(148,163,184,.2);border-radius:999px;color:var(--muted);font-weight:600;font-size:.8rem}
+    @media (max-width: 880px){.grid.cols-2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <nav>
+      <a href="home.html" class="brand" aria-label="Ir a inicio">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 14.5a1 1 0 0 1-2 0V13a1 1 0 0 1 2 0Zm-1-9a1.5 1.5 0 1 1-1.5 1.5A1.5 1.5 0 0 1 12 7.5Z"/></svg>
+        CiberGuard
+      </a>
+      <div class="navlinks">
+        <a href="criptografia.html">Criptografía</a>
+        <a class="tag">Generador & verificador</a>
+        <button class="btn" onclick="window.print()">Imprimir (PDF)</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <h1>Generador y verificador de <span style="background:linear-gradient(135deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent">contraseñas seguras</span></h1>
+    <p class="muted">Crea contraseñas robustas, evalúa su fortaleza, ve entropía estimada y tiempo de crackeo. 100% local (no se envía nada).</p>
+  </section>
+
+  <section class="grid cols-2">
+    <!-- Generador -->
+    <div class="card">
+      <h2>Generar contraseña</h2>
+      <div class="row" style="margin-bottom:6px">
+        <label class="muted">Longitud: <b id="lenVal">16</b></label>
+        <input id="len" type="range" min="8" max="64" value="16" style="width:220px"/>
+        <label class="row"><input type="checkbox" id="gLower" checked/> minúsculas</label>
+        <label class="row"><input type="checkbox" id="gUpper" checked/> MAYÚSCULAS</label>
+        <label class="row"><input type="checkbox" id="gDigits" checked/> dígitos</label>
+        <label class="row"><input type="checkbox" id="gSymbols" checked/> símbolos</label>
+        <label class="row"><input type="checkbox" id="gNoAmb"/> evitar ambiguos (l,1,I,O,0)</label>
+      </div>
+      <div class="row">
+        <input id="genOut" class="mono" type="text" placeholder="Tu contraseña segura" readonly/>
+        <button class="btn" onclick="generate()">Generar</button>
+        <button class="copy" onclick="copy('#genOut')">Copiar</button>
+        <label class="row"><input id="reveal" type="checkbox"/> mostrar</label>
+      </div>
+      <div class="tips" style="margin-top:8px">Consejo: usa ≥ 14 caracteres y mezcla tipos. Para producción, emplea un gestor de contraseñas.</div>
+    </div>
+
+    <!-- Verificador -->
+    <div class="card">
+      <h2>Verificar contraseña</h2>
+      <input id="pw" class="mono" type="password" placeholder="Escribe/pega tu contraseña"/>
+      <div class="row" style="margin:8px 0"><label class="row"><input id="showPw" type="checkbox"/> mostrar</label></div>
+      <div class="meter" aria-label="Fortaleza"><span id="meter"></span></div>
+      <div class="row" style="margin-top:8px"><span id="rating" class="tag">—</span><span class="tag" id="entropy">Entropía: —</span><span class="tag" id="crack">Crack: —</span></div>
+      <ul id="advice" class="tips"></ul>
+      <div class="tips">Nota: No se verifica contra bases de datos de brechas (offline). Evita reutilizar contraseñas.</div>
+    </div>
+  </section>
+
+  <!-- Passphrase -->
+  <section class="card" style="margin:18px 0">
+    <h2>Passphrase (frase de paso) memorable</h2>
+    <p class="muted">Frases aleatorias de 4–6 palabras. Opcional: añadir dígitos y símbolo para robustecer. Ideal para recordar.</p>
+    <div class="row">
+      <label>Palabras: <b id="wCountVal">4</b></label>
+      <input id="wCount" type="range" min="4" max="6" value="4" style="width:180px"/>
+      <label class="row"><input id="ppDigits" type="checkbox" checked/> añadir número</label>
+      <label class="row"><input id="ppSymbol" type="checkbox"/> añadir símbolo</label>
+      <button class="btn" onclick="genPassphrase()">Generar frase</button>
+      <button class="copy" onclick="copy('#ppOut')">Copiar</button>
+    </div>
+    <input id="ppOut" class="mono" style="margin-top:8px" type="text" placeholder="tu-frase-segura-123*" readonly/>
+  </section>
+
+  <section class="card" style="margin:18px 0">
+    <b>Descargo educativo:</b> Este verificador estima fortaleza por longitud, variedad de caracteres y patrones comunes. No reemplaza controles empresariales ni validaciones contra credenciales expuestas.
+  </section>
+</main>
+
+<script>
+  // ===== Utilidades =====
+  const $ = sel => document.querySelector(sel);
+  const enc = new TextEncoder();
+  function copySel(el){ el.select(); document.execCommand('copy'); }
+  async function copy(sel){ try{ await navigator.clipboard.writeText($(sel).value || ''); }catch{ copySel($(sel)); } }
+  function rand(n){ const a=new Uint8Array(n); crypto.getRandomValues(a); return a; }
+  function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=(rand(1)[0]%(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+  const LOWER='abcdefghijklmnopqrstuvwxyz';
+  const UPPER='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const DIGITS='0123456789';
+  const SYMBOLS='!@#$%^&*()-_=+[]{};:,./?~`|<>';
+  const AMBIG='l1I0O';
+
+  // ===== Generador =====
+  $('#len').addEventListener('input', e=> $('#lenVal').textContent = e.target.value);
+  $('#reveal').addEventListener('change', e=> $('#genOut').type = e.target.checked? 'text':'password');
+
+  function buildPool(){
+    let pool=''; const req=[];
+    if($('#gLower').checked){ pool+=LOWER; req.push(LOWER); }
+    if($('#gUpper').checked){ pool+=UPPER; req.push(UPPER); }
+    if($('#gDigits').checked){ pool+=DIGITS; req.push(DIGITS); }
+    if($('#gSymbols').checked){ pool+=SYMBOLS; req.push(SYMBOLS); }
+    if($('#gNoAmb').checked){ const r=new RegExp('['+AMBIG.replace(/./g,c=>`\\${c}`)+']','g'); pool=pool.replace(r,''); for(let i=0;i<req.length;i++){ req[i]=req[i].replace(r,''); }
+    }
+    return {pool, req};
+  }
+  function generate(){
+    const len = parseInt($('#len').value);
+    const {pool, req} = buildPool();
+    if(!pool){ alert('Selecciona al menos un tipo de carácter'); return }
+    // Garantizar 1 de cada set requerido
+    const out=[]; req.forEach(set=>{ if(set.length){ out.push(set[(rand(1)[0])%set.length]); } });
+    while(out.length < len){ out.push(pool[(rand(1)[0])%pool.length]); }
+    $('#genOut').type = $('#reveal').checked? 'text':'password';
+    $('#genOut').value = shuffle(out).join('');
+  }
+
+  // ===== Verificador =====
+  $('#showPw').addEventListener('change', e=> $('#pw').type = e.target.checked? 'text':'password');
+  $('#pw').addEventListener('input', ()=> assess($('#pw').value));
+
+  const common = new Set(['123456','password','qwerty','admin','abc123','letmein','111111','12345678','iloveyou','000000','123123','qwertyuiop','monkey','dragon']);
+
+  function hasSeq(s){
+    const k='abcdefghijklmnopqrstuvwxyz'; const d='0123456789';
+    const n=s.toLowerCase();
+    for(let i=0;i<n.length-2;i++){
+      const a=n[i], b=n[i+1], c=n[i+2];
+      if(k.includes(a) && k.indexOf(b)===k.indexOf(a)+1 && k.indexOf(c)===k.indexOf(b)+1) return true;
+      if(d.includes(a) && d.indexOf(b)===d.indexOf(a)+1 && d.indexOf(c)===d.indexOf(b)+1) return true;
+    }
+    return false;
+  }
+  function charSets(pw){
+    let pool=0; let sets=0; let variety=0;
+    const tests=[ [LOWER,26], [UPPER,26], [DIGITS,10], [SYMBOLS,32] ];
+    tests.forEach(([set,size])=>{ if([...pw].some(ch=>set.includes(ch))){ pool+=size; variety++; sets++; } });
+    if(pool===0) return {pool:pw? pw.length:0, sets:0, variety:0};
+    return {pool, sets, variety};
+  }
+  function entropyBits(len, pool){ if(pool<=1||len<=0) return 0; return Math.log2(pool) * len; }
+  function crackTime(bits){ // 1e10 guesses/seg (conservador)
+    const guesses = Math.pow(2,bits);
+    const perSec = 1e10;
+    const secs = guesses / perSec;
+    const units = [ ['años',31557600], ['días',86400], ['horas',3600], ['min',60], ['s',1] ];
+    for(const [name,div] of units){ if(secs>=div) return (secs/div).toFixed(1)+' '+name; }
+    return secs.toFixed(2)+' s';
+  }
+  function assess(pw){
+    const meter = $('#meter'); const rating=$('#rating'); const adv=$('#advice'); const ent=$('#entropy'); const ck=$('#crack');
+    adv.innerHTML='';
+    if(!pw){ meter.style.width='0%'; rating.textContent='—'; ent.textContent='Entropía: —'; ck.textContent='Crack: —'; return; }
+    const len = pw.length;
+    const {pool,sets,variety} = charSets(pw);
+    const bits = entropyBits(len, pool);
+    ent.textContent = 'Entropía: '+bits.toFixed(1)+' bits';
+    ck.textContent = 'Crack: '+crackTime(bits);
+
+    // Puntuación base
+    let score = 0;
+    score += Math.min(4, Math.floor(len/4)); // 0..4
+    score += Math.min(4, sets);              // 0..4
+    if(/(.)\1{2,}/.test(pw)) score -= 2;     // repeticiones 3+
+    if(hasSeq(pw)) score -= 2;               // secuencias
+    if(common.has(pw.toLowerCase())) score = 0; // común
+
+    // Clasificación
+    const clamp = (n,min,max)=> Math.max(min, Math.min(max, n));
+    const pct = clamp((score+2)*10, 0, 100); // 0..100 aprox
+    meter.style.width = pct+'%';
+    let label='Débil';
+    if(pct>=25) label='Baja';
+    if(pct>=50) label='Media';
+    if(pct>=75) label='Fuerte';
+    if(pct>=90) label='Excelente';
+    rating.textContent = label;
+
+    // Consejos
+    const tips=[];
+    if(len<12) tips.push('Usa al menos 12–14 caracteres.');
+    if(sets<3) tips.push('Mezcla mayúsculas, minúsculas, dígitos y símbolos.');
+    if(/(.)\1{2,}/.test(pw)) tips.push('Evita repeticiones como "aaa" o "111".');
+    if(hasSeq(pw)) tips.push('Evita secuencias como "abc" o "123".');
+    if(common.has(pw.toLowerCase())) tips.push('Muy común: cambia por otra totalmente distinta.');
+    if(tips.length===0) tips.push('¡Bien! Mantén esta contraseña única (no la reutilices).');
+    tips.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; adv.appendChild(li); });
+  }
+
+  // ===== Passphrase =====
+  const WORDS = 'sol,luna,roca,eco,brisa,mar,arroz,azul,verde,roble,perla,kiwi,tecla,raton,perro,gato,mango,limon,cafe,mate,jarro,plaza,rueda,tren,avion,clave,fragil,calma,aguila,zorro,nube,rayo,trueno,astro,delta,omega,neon,cerro,puente,parque,ruta,puerto,campo,flor,pluma,lago,rivera,río,playa,bosque,selva,arena,hoja,brillo,norte,sur,este,oeste,faro,orion,venus,cometa,helio,nitro,cuarzo,oro,plata,bronce,acero,hierro,robon,duende,gnomo,mito,karma,zen,tempo,sonar,ritmo,puerta,clave,escudo,torre,muro,cable,token,hash,salto,vector,matriz,cifra,octeto,bit,byte,logic,bug,fuego,hielo,rojo,negro,blanco,gris,ambar'.split(',');
+  $('#wCount').addEventListener('input', e=> $('#wCountVal').textContent = e.target.value);
+  function pick(arr){ return arr[(rand(2)[0] * 256 + rand(2)[1]) % arr.length]; }
+  function genPassphrase(){
+    const n = parseInt($('#wCount').value);
+    const words = [];
+    for(let i=0;i<n;i++) words.push(pick(WORDS));
+    let sep = '-';
+    let out = words.join(sep);
+    if($('#ppDigits').checked){ out += (Math.floor((rand(1)[0])/25)); }
+    if($('#ppSymbol').checked){ const sy = SYMBOLS.replace(/[\[\]{}()|^$]/g,'').split(''); out += sy[(rand(1)[0])%sy.length]; }
+    $('#ppOut').value = out;
+  }
+
+  // Inicial
+  generate(); assess(''); genPassphrase();
+</script>
+</body>
+</html>
